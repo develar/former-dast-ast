@@ -37,7 +37,12 @@ public final class JsNameRef extends JsExpressionImpl implements HasName {
     }
 
     public String getIdent() {
-        return (name == null) ? ident : name.getIdent();
+        return name == null ? ident : name.getIdent();
+    }
+
+    public void setIdent(String ident) {
+        assert name == null;
+        this.ident = ident;
     }
 
     @Override
