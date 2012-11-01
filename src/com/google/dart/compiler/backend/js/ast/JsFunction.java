@@ -12,7 +12,7 @@ import java.util.List;
 
 public final class JsFunction extends JsLiteral implements HasName {
     private JsBlock body;
-    private List<JsParameter> params;
+    private List<JsParameter> parameters;
     private final JsScope scope;
     private JsName name;
 
@@ -45,10 +45,14 @@ public final class JsFunction extends JsLiteral implements HasName {
     }
 
     public List<JsParameter> getParameters() {
-        if (params == null) {
-            params = new SmartList<JsParameter>();
+        if (parameters == null) {
+            parameters = new SmartList<JsParameter>();
         }
-        return params;
+        return parameters;
+    }
+
+    public void setParameters(List<JsParameter> parameters) {
+        this.parameters = parameters;
     }
 
     public JsScope getScope() {
@@ -70,7 +74,7 @@ public final class JsFunction extends JsLiteral implements HasName {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.acceptWithInsertRemove(params);
+        visitor.acceptWithInsertRemove(parameters);
         visitor.accept(body);
     }
 }
