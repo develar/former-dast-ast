@@ -4,11 +4,9 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-import com.google.dart.compiler.common.HasSymbol;
-
 /**
  * Implemented by JavaScript objects that have a name.
  */
-public interface HasName extends HasSymbol {
+public interface HasName {
   JsName getName();
 }

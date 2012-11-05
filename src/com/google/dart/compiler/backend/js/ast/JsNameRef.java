@@ -4,8 +4,6 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-import com.google.dart.compiler.common.Symbol;
-
 /**
  * Represents a JavaScript expression that references a name.
  */
@@ -47,11 +45,6 @@ public final class JsNameRef extends JsExpressionImpl implements HasName {
 
     @Override
     public JsName getName() {
-        return name;
-    }
-
-    @Override
-    public Symbol getSymbol() {
         return name;
     }
 

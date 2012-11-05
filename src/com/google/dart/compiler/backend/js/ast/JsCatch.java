@@ -4,21 +4,18 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-/**
- * Represents a JavaScript catch clause.
- */
 public class JsCatch extends SourceInfoAwareJsNode implements HasCondition {
-
     protected final JsCatchScope scope;
     private JsBlock body;
     private JsExpression condition;
-    private JsParameter param;
+    private JsParameter parameter;
 
     public JsCatch(JsScope parent, String ident) {
         super();
         assert (parent != null);
+        parent.declareFreshName(ident);
         scope = new JsCatchScope(parent, ident);
-        param = new JsParameter(scope.findName(ident));
+        parameter = new JsParameter(scope.findName(ident));
     }
 
     public JsBlock getBody() {
@@ -31,7 +28,7 @@ public class JsCatch extends SourceInfoAwareJsNode implements HasCondition {
     }
 
     public JsParameter getParameter() {
-        return param;
+        return parameter;
     }
 
     public JsScope getScope() {
@@ -54,7 +51,7 @@ public class JsCatch extends SourceInfoAwareJsNode implements HasCondition {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.accept(param);
+        visitor.accept(parameter);
         if (condition != null) {
             visitor.accept(condition);
         }

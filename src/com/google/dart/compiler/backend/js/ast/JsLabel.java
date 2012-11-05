@@ -4,8 +4,6 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-import com.google.dart.compiler.common.Symbol;
-
 /**
  * Represents a JavaScript label statement.
  */
@@ -25,11 +23,6 @@ public class JsLabel extends SourceInfoAwareJsNode implements JsStatement, HasNa
 
     @Override
     public JsName getName() {
-        return label;
-    }
-
-    @Override
-    public Symbol getSymbol() {
         return label;
     }
 

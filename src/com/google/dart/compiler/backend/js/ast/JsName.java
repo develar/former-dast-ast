@@ -4,12 +4,10 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-import com.google.dart.compiler.common.Symbol;
-
 /**
  * An abstract base class for named JavaScript objects.
  */
-public class JsName implements Symbol {
+public class JsName {
   private final JsScope enclosing;
   private final String ident;
 
