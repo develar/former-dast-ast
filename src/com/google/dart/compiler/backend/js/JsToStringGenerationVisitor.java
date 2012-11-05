@@ -338,14 +338,12 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
     @Override
     public void visitCatch(JsCatch x) {
-        spaceOpt();
         p.print(CHARS_CATCH);
         spaceOpt();
         leftParen();
         nameDef(x.getParameter().getName());
 
         // Optional catch condition.
-        //
         JsExpression catchCond = x.getCondition();
         if (catchCond != null) {
             space();
