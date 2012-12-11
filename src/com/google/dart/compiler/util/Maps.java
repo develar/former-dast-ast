@@ -4,8 +4,9 @@
 
 package com.google.dart.compiler.util;
 
+import gnu.trove.THashMap;
+
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,7 +28,7 @@ public class Maps {
                     return Collections.singletonMap(key, value);
                 }
                 // Singleton -> HashMap
-                Map<K, V> result = new HashMap<K, V>();
+                Map<K, V> result = new THashMap<K, V>();
                 result.put(map.keySet().iterator().next(), map.values().iterator().next());
                 result.put(key, value);
                 return result;
