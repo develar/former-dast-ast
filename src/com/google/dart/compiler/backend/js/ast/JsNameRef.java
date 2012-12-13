@@ -4,48 +4,32 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-/**
- * Represents a JavaScript expression that references a name.
- */
+import org.jetbrains.annotations.Nullable;
+
 public final class JsNameRef extends JsExpressionImpl implements HasName {
-    private String ident;
-    private JsName name;
+    private String name;
     private JsExpression qualifier;
 
-    public JsNameRef(JsName name) {
+    public JsNameRef(String name) {
         this.name = name;
     }
 
-    public JsNameRef(String ident) {
-        this.ident = ident;
-    }
-
-    public JsNameRef(String ident, JsExpression qualifier) {
-        this.ident = ident;
-        this.qualifier = qualifier;
-    }
-
-    public JsNameRef(String ident, String qualifier) {
-        this(ident, new JsNameRef(qualifier));
-    }
-
-    public JsNameRef(JsName name, JsExpression qualifier) {
+    public JsNameRef(String name, JsExpression qualifier) {
         this.name = name;
         this.qualifier = qualifier;
     }
 
-    public String getIdent() {
-        return name == null ? ident : name.getIdent();
-    }
-
-    public void setIdent(String ident) {
-        assert name == null;
-        this.ident = ident;
+    public JsNameRef(String name, String qualifier) {
+        this(name, new JsNameRef(qualifier));
     }
 
     @Override
-    public JsName getName() {
+    public String getName() {
         return name;
+    }
+
+    public void setName(@Nullable String name) {
+        this.name = name;
     }
 
     public JsExpression getQualifier() {
@@ -55,11 +39,6 @@ public final class JsNameRef extends JsExpressionImpl implements HasName {
     @Override
     public boolean isLeaf() {
         return qualifier == null;
-    }
-
-    public void resolve(JsName name) {
-        this.name = name;
-        ident = null;
     }
 
     public void setQualifier(JsExpression qualifier) {

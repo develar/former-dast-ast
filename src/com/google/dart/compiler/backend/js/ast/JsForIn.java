@@ -10,13 +10,13 @@ public class JsForIn extends SourceInfoAwareJsNode implements JsStatement {
     private JsExpression objectExpression;
 
     // Optional: the name of a new iterator variable to introduce
-    private final JsName iterVarName;
+    private final String iterVarName;
 
     public JsForIn() {
         this(null);
     }
 
-    public JsForIn(JsName iterVarName) {
+    public JsForIn(String iterVarName) {
         this.iterVarName = iterVarName;
     }
 
@@ -28,7 +28,7 @@ public class JsForIn extends SourceInfoAwareJsNode implements JsStatement {
         return iterExpression;
     }
 
-    public JsName getIterVarName() {
+    public String getIterVarName() {
         return iterVarName;
     }
 

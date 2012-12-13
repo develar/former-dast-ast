@@ -341,7 +341,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         p.print(CHARS_CATCH);
         spaceOpt();
         leftParen();
-        nameDef(x.getParameter().getName());
+        p.print(x.getParameter().getName());
 
         // Optional catch condition.
         JsExpression catchCond = x.getCondition();
@@ -495,7 +495,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         if (x.getIterVarName() != null) {
             var();
             space();
-            nameDef(x.getIterVarName());
+            p.print(x.getIterVarName());
 
             if (x.getIterExpression() != null) {
                 spaceOpt();
@@ -622,7 +622,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
         p.maybeIndent();
         beforeNodePrinted(nameRef);
-        p.print(nameRef.getIdent());
+        p.print(nameRef.getName());
     }
 
     protected void beforeNodePrinted(JsNode node) {
@@ -688,7 +688,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
             JsExpression labelExpr = item.getLabelExpr();
             // labels can be either string, integral, or decimal literals
             if (labelExpr instanceof JsNameRef) {
-                p.print(((JsNameRef) labelExpr).getIdent());
+                p.print(((JsNameRef) labelExpr).getName());
             }
             else if (labelExpr instanceof JsStringLiteral) {
                 p.print(((JsStringLiteral) labelExpr).getValue());
@@ -1040,12 +1040,8 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         p.print('[');
     }
 
-    private void nameDef(JsName name) {
-        p.print(name.getIdent());
-    }
-
     private void nameOf(HasName hasName) {
-        nameDef(hasName.getName());
+        p.print(hasName.getName());
     }
 
     private boolean nestedPop(JsStatement statement) {

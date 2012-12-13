@@ -5,14 +5,14 @@
 package com.google.dart.compiler.backend.js.ast;
 
 public final class JsParameter extends SourceInfoAwareJsNode implements HasName {
-    private final JsName name;
+    private final String name;
 
-    public JsParameter(JsName name) {
+    public JsParameter(String name) {
         this.name = name;
     }
 
     @Override
-    public JsName getName() {
+    public String getName() {
         return name;
     }
 

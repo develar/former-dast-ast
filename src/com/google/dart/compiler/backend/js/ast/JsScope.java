@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * A scope is a factory for creating and allocating
- * {@link JsName}s. A JavaScript AST is
+ * {@link String}s. A JavaScript AST is
  * built in terms of abstract name objects without worrying about obfuscation,
  * keyword/identifier blacklisting, and so on.
  * <p/>
@@ -40,7 +40,7 @@ import java.util.Map;
 public class JsScope {
     @Nullable
     private final String description;
-    private Map<String, JsName> names = Collections.emptyMap();
+    private Map<String, String> names = Collections.emptyMap();
     private final JsScope parent;
     protected int tempIndex = 0;
     private final String scopeId;
@@ -80,8 +80,8 @@ public class JsScope {
      *
      * @param identifier An identifier that is unique within this scope.
      */
-    public JsName declareName(String identifier) {
-        JsName name = findOwnName(identifier);
+    public String declareName(String identifier) {
+        String name = findOwnName(identifier);
         return name != null ? name : doCreateName(identifier);
     }
 
@@ -92,7 +92,7 @@ public class JsScope {
      * (unless they use this function).
      */
     @NotNull
-    public JsName declareFreshName(String suggestedName) {
+    public String declareFreshName(String suggestedName) {
         String name = suggestedName;
         int counter = 0;
         while (hasOwnName(name)) {
@@ -112,7 +112,7 @@ public class JsScope {
      * name) that does not clash with any existing variables in the scope.
      * Future declarations of variables might however clash with the temporary.
      */
-    public JsName declareTemporary() {
+    public String declareTemporary() {
         return declareFreshName(getNextTempName());
     }
 
@@ -123,8 +123,8 @@ public class JsScope {
      * @return <code>null</code> if the identifier has no associated name
      */
     @Nullable
-    public final JsName findName(String ident) {
-        JsName name = findOwnName(ident);
+    public final String findName(String ident) {
+        String name = findOwnName(ident);
         if (name == null && parent != null) {
             return parent.findName(ident);
         }
@@ -158,9 +158,8 @@ public class JsScope {
         }
     }
 
-    protected JsName doCreateName(String ident) {
-        JsName name = new JsName(this, ident);
-        names = Maps.put(names, ident, name);
+    protected String doCreateName(String name) {
+        names = Maps.put(names, name, name);
         return name;
     }
 
@@ -170,7 +169,7 @@ public class JsScope {
      *
      * @return <code>null</code> if the identifier has no associated name
      */
-    protected JsName findOwnName(String ident) {
+    protected String findOwnName(String ident) {
         return names.get(ident);
     }
 }

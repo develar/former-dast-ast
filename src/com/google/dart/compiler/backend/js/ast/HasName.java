@@ -8,5 +8,5 @@ package com.google.dart.compiler.backend.js.ast;
  * Implemented by JavaScript objects that have a name.
  */
 public interface HasName {
-  JsName getName();
+  String getName();
 }

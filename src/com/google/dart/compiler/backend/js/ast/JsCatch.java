@@ -9,7 +9,7 @@ public class JsCatch extends SourceInfoAwareJsNode implements HasCondition {
     private JsExpression condition;
     private final JsParameter param;
 
-    public JsCatch(JsName ident) {
+    public JsCatch(String ident) {
         super();
         param = new JsParameter(ident);
     }

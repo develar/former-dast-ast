@@ -13,20 +13,20 @@ public final class JsFunction extends JsLiteral implements HasName {
     private JsBlock body;
     private List<JsParameter> parameters;
     private final JsScope scope;
-    private JsName name;
+    private String name;
 
     public JsFunction(JsScope parentScope) {
-        this(parentScope, (JsName) null);
+        this(parentScope, (String) null);
     }
 
     public JsFunction(JsScope parentScope, JsBlock body) {
-        this(parentScope, (JsName) null);
+        this(parentScope, (String) null);
         this.body = body;
     }
 
-    private JsFunction(JsScope parentScope, @Nullable JsName name) {
+    private JsFunction(JsScope parentScope, @Nullable String name) {
         this.name = name;
-        scope = new JsScope(parentScope, name == null ? null : name.getIdent());
+        scope = new JsScope(parentScope, name);
     }
 
     public JsBlock getBody() {
@@ -34,8 +34,12 @@ public final class JsFunction extends JsLiteral implements HasName {
     }
 
     @Override
-    public JsName getName() {
+    public String getName() {
         return name;
+    }
+
+    public void setName(@Nullable String name) {
+        this.name = name;
     }
 
     public List<JsParameter> getParameters() {
@@ -55,10 +59,6 @@ public final class JsFunction extends JsLiteral implements HasName {
 
     public void setBody(JsBlock body) {
         this.body = body;
-    }
-
-    public void setName(@Nullable JsName name) {
-        this.name = name;
     }
 
     @Override
