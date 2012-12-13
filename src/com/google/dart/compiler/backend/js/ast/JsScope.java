@@ -95,7 +95,7 @@ public class JsScope {
     public String declareFreshName(String suggestedName) {
         String name = suggestedName;
         int counter = 0;
-        while (hasOwnName(name)) {
+        while (names.containsKey(name)) {
             name = suggestedName + '_' + counter++;
         }
         return doCreateName(name);
@@ -131,10 +131,6 @@ public class JsScope {
         return name;
     }
 
-    protected boolean hasOwnName(@NotNull String name) {
-        return names.containsKey(name);
-    }
-
     /**
      * Returns the parent scope of this scope, or <code>null</code> if this is the
      * root scope.
@@ -150,12 +146,7 @@ public class JsScope {
 
     @Override
     public final String toString() {
-        if (parent != null) {
-            return description + "->" + parent;
-        }
-        else {
-            return description;
-        }
+        return parent != null ? description + "->" + parent : description;
     }
 
     protected String doCreateName(String name) {
