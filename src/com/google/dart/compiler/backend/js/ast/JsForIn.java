@@ -56,7 +56,7 @@ public class JsForIn extends JsStatement {
     @Override
     public void acceptChildren(JsVisitor visitor) {
         if (iterExpression != null) {
-            visitor.acceptLvalue(iterExpression);
+            visitor.accept(iterExpression);
         }
         visitor.accept(objectExpression);
         visitor.accept(body);

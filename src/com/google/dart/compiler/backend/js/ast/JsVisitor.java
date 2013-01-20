@@ -19,10 +19,6 @@ public abstract class JsVisitor {
         }
     }
 
-    public void acceptLvalue(JsExpression expression) {
-        accept(expression);
-    }
-
     public final <T extends JsNode> void acceptWithInsertRemove(List<T> collection) {
         for (T node : collection) {
             accept(node);

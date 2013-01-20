@@ -41,7 +41,7 @@ public final class JsBinaryOperation extends JsExpressionImpl {
     @Override
     public void acceptChildren(JsVisitor visitor) {
         if (op.isAssignment()) {
-            visitor.acceptLvalue(arg1);
+            visitor.accept(arg1);
         }
         else {
             visitor.accept(arg1);

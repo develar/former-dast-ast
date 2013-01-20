@@ -37,7 +37,7 @@ public abstract class JsUnaryOperation extends JsExpressionImpl {
         if (op.isModifying()) {
             // The delete operator is practically like an assignment of undefined, so
             // for practical purposes we're treating it as an lvalue.
-            visitor.acceptLvalue(arg);
+            visitor.accept(arg);
         }
         else {
             visitor.accept(arg);

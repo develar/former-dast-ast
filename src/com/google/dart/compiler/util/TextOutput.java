@@ -4,9 +4,6 @@
 
 package com.google.dart.compiler.util;
 
-/**
- * Interface used for printing text output.
- */
 public interface TextOutput {
     int getPosition();
 
