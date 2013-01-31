@@ -13,9 +13,7 @@ import java.util.Map;
 import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsDoubleLiteral;
 import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsIntLiteral;
 
-public final class JsProgram extends SourceInfoAwareJsNode {
-    private JsProgramFragment[] fragments;
-
+public final class JsProgram extends JsGlobalBlock {
     private final TDoubleObjectHashMap<JsDoubleLiteral> doubleLiteralMap = new TDoubleObjectHashMap<JsDoubleLiteral>();
     private final TIntObjectHashMap<JsIntLiteral> intLiteralMap = new TIntObjectHashMap<JsIntLiteral>();
 
@@ -26,18 +24,6 @@ public final class JsProgram extends SourceInfoAwareJsNode {
     public JsProgram(String unitId) {
         rootScope = new JsRootScope(this);
         topScope = new JsScope(rootScope, "Global", unitId);
-        setFragmentCount(1);
-    }
-
-    public JsBlock getFragmentBlock(int fragment) {
-        if (fragment < 0 || fragment >= fragments.length) {
-            throw new IllegalArgumentException("Invalid fragment: " + fragment);
-        }
-        return fragments[fragment].getGlobalBlock();
-    }
-
-    public JsBlock getGlobalBlock() {
-        return getFragmentBlock(0);
     }
 
     public JsNumberLiteral getNumberLiteral(double value) {
@@ -89,22 +75,8 @@ public final class JsProgram extends SourceInfoAwareJsNode {
         return literal;
     }
 
-    public void setFragmentCount(int fragments) {
-        this.fragments = new JsProgramFragment[fragments];
-        for (int i = 0; i < fragments; i++) {
-            this.fragments[i] = new JsProgramFragment();
-        }
-    }
-
     @Override
     public void accept(JsVisitor v) {
         v.visitProgram(this);
-    }
-
-    @Override
-    public void acceptChildren(JsVisitor visitor) {
-        for (JsProgramFragment fragment : fragments) {
-            visitor.accept(fragment);
-        }
     }
 }

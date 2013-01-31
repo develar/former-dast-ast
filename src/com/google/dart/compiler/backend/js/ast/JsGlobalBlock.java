@@ -8,12 +8,11 @@ package com.google.dart.compiler.backend.js.ast;
  * Represents a JavaScript block in the global scope.
  */
 public class JsGlobalBlock extends JsBlock {
+    public JsGlobalBlock() {
+    }
 
-  public JsGlobalBlock() {
-  }
-
-  @Override
-  public boolean isGlobalBlock() {
-    return true;
-  }
+    @Override
+    public boolean isGlobalBlock() {
+        return true;
+    }
 }

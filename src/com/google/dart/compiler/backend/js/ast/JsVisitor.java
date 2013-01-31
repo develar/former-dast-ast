@@ -153,10 +153,6 @@ public abstract class JsVisitor {
         visitElement(x);
     }
 
-    public void visitProgramFragment(JsProgramFragment x) {
-        visitElement(x);
-    }
-
     public void visitPropertyInitializer(JsPropertyInitializer x) {
         visitElement(x);
     }
