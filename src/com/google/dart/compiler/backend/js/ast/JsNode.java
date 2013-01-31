@@ -27,4 +27,6 @@ public interface JsNode {
     void setSource(Object info);
 
     JsNode source(Object info);
+
+    JsStatement asStatement();
 }

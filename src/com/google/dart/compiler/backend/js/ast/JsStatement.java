@@ -4,5 +4,11 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-public interface JsStatement extends JsNode {
+public abstract class JsStatement extends SourceInfoAwareJsNode implements JsNode {
+    public static final JsStatement EMPTY = new JsEmpty();
+
+    @Override
+    public final JsStatement asStatement() {
+        return this;
+    }
 }

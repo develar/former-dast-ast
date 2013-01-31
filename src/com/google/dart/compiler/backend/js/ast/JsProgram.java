@@ -13,12 +13,7 @@ import java.util.Map;
 import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsDoubleLiteral;
 import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsIntLiteral;
 
-/**
- * A JavaScript program.
- */
 public final class JsProgram extends SourceInfoAwareJsNode {
-    private final JsEmpty emptyStatement;
-
     private JsProgramFragment[] fragments;
 
     private final TDoubleObjectHashMap<JsDoubleLiteral> doubleLiteralMap = new TDoubleObjectHashMap<JsDoubleLiteral>();
@@ -32,12 +27,6 @@ public final class JsProgram extends SourceInfoAwareJsNode {
         rootScope = new JsRootScope(this);
         topScope = new JsScope(rootScope, "Global", unitId);
         setFragmentCount(1);
-
-        emptyStatement = new JsEmpty();
-    }
-
-    public JsEmpty getEmptyStatement() {
-        return emptyStatement;
     }
 
     public JsBlock getFragmentBlock(int fragment) {

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Represents a JavaScript block statement.
  */
-public class JsBlock extends SourceInfoAwareJsNode implements JsStatement {
+public class JsBlock extends JsStatement {
     private final List<JsStatement> statements;
 
     public JsBlock() {

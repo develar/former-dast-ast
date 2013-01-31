@@ -6,7 +6,7 @@ package com.google.dart.compiler.backend.js.ast;
 
 import org.jetbrains.annotations.Nullable;
 
-public class JsContinue extends SourceInfoAwareJsNode implements JsStatement {
+public class JsContinue extends JsStatement {
     protected final String label;
 
     public JsContinue() {

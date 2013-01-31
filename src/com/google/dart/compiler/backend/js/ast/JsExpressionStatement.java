@@ -4,7 +4,7 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-public final class JsExpressionStatement extends AbstractNode implements JsStatement {
+public final class JsExpressionStatement extends JsStatement {
     private JsExpression expression;
 
     public JsExpressionStatement(JsExpression expression) {

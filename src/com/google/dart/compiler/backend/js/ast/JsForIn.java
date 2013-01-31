@@ -4,7 +4,7 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-public class JsForIn extends SourceInfoAwareJsNode implements JsStatement {
+public class JsForIn extends JsStatement {
     private JsStatement body;
     private JsExpression iterExpression;
     private JsExpression objectExpression;

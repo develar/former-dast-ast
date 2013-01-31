@@ -4,10 +4,7 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-/**
- * Represents a JavaScript label statement.
- */
-public class JsLabel extends SourceInfoAwareJsNode implements JsStatement, HasName {
+public class JsLabel extends JsStatement implements HasName {
     private final String label;
 
     private JsStatement statement;

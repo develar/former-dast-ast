@@ -42,4 +42,9 @@ abstract class JsExpressionImpl extends SourceInfoAwareJsNode implements JsExpre
         setSource(info);
         return this;
     }
+
+    @Override
+    public final JsStatement asStatement() {
+        return new JsExpressionStatement(this);
+    }
 }

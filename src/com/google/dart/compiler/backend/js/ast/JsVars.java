@@ -9,13 +9,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-/**
- * A JavaScript <code>var</code> statement.
- */
-public class JsVars extends SourceInfoAwareJsNode implements JsStatement, Iterable<JsVars.JsVar> {
+public class JsVars extends JsStatement {
     private final List<JsVar> vars;
 
     private final boolean multiline;
@@ -41,6 +37,10 @@ public class JsVars extends SourceInfoAwareJsNode implements JsStatement, Iterab
         this(Arrays.asList(vars), false);
     }
 
+    public List<JsVar> getVars() {
+        return vars;
+    }
+
     public boolean isMultiline() {
         return multiline;
     }
@@ -48,7 +48,7 @@ public class JsVars extends SourceInfoAwareJsNode implements JsStatement, Iterab
     /**
      * A var declared using the JavaScript <code>var</code> statement.
      */
-    public static class JsVar extends SourceInfoAwareJsNode implements HasName {
+    public static class JsVar extends JsStatement implements HasName {
         private final String name;
         private JsExpression initExpression;
 
@@ -99,11 +99,6 @@ public class JsVars extends SourceInfoAwareJsNode implements JsStatement, Iterab
 
     public boolean isEmpty() {
         return vars.isEmpty();
-    }
-
-    @Override
-    public Iterator<JsVar> iterator() {
-        return vars.iterator();
     }
 
     @Override

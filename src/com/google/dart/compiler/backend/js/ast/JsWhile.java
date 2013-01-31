@@ -7,7 +7,7 @@ package com.google.dart.compiler.backend.js.ast;
 /**
  * A JavaScript <code>while</code> statement.
  */
-public class JsWhile extends SourceInfoAwareJsNode implements JsStatement {
+public class JsWhile extends JsStatement {
     protected JsStatement body;
     protected JsExpression condition;
 

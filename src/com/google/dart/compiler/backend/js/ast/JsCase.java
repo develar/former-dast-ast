@@ -4,9 +4,6 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-/**
- * Represents the JavaScript case statement.
- */
 public final class JsCase extends JsSwitchMember {
     private JsExpression caseExpression;
 
