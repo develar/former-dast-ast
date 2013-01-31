@@ -43,19 +43,12 @@ public class JsScope {
     private Map<String, String> names = Collections.emptyMap();
     private final JsScope parent;
     protected int tempIndex = 0;
-    private final String scopeId;
-
-    public JsScope(JsScope parent, @Nullable String description) {
-        this(parent, description, null);
-    }
 
     public JsScope(JsScope parent) {
         this(parent, null);
     }
 
-    public JsScope(JsScope parent, @Nullable String description, @Nullable String scopeId) {
-        assert (parent != null);
-        this.scopeId = scopeId;
+    public JsScope(@NotNull JsScope parent, @Nullable String description) {
         this.description = description;
         this.parent = parent;
     }
@@ -68,7 +61,6 @@ public class JsScope {
     protected JsScope(@Nullable String description) {
         this.description = description;
         parent = null;
-        scopeId = null;
     }
 
     /**
@@ -101,11 +93,6 @@ public class JsScope {
         return doCreateName(name);
     }
 
-    private String getNextTempName() {
-        // introduced by the compiler
-        return "tmp$" + (scopeId != null ? scopeId + "$" : "") + tempIndex++;
-    }
-
     /**
      * Creates a temporary variable with an unique name in this scope.
      * The generated temporary is guaranteed to have an identifier (but not short
@@ -113,7 +100,7 @@ public class JsScope {
      * Future declarations of variables might however clash with the temporary.
      */
     public String declareTemporary() {
-        return declareFreshName(getNextTempName());
+        return declareFreshName("tmp$" + tempIndex++);
     }
 
     /**

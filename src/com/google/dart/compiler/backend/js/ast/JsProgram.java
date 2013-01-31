@@ -23,7 +23,7 @@ public final class JsProgram extends JsGlobalBlock {
 
     public JsProgram(String unitId) {
         rootScope = new JsRootScope(this);
-        topScope = new JsScope(rootScope, "Global", unitId);
+        topScope = new JsScope(rootScope, "Global");
     }
 
     public JsNumberLiteral getNumberLiteral(double value) {
