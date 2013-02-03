@@ -884,7 +884,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
                     p.print((CharSequence) value);
                 }
                 else {
-                    visitNameRef((JsNameRef) value);
+                    accept((JsExpression) value);
                 }
             }
 

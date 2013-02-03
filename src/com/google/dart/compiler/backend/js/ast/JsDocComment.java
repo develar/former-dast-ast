@@ -14,7 +14,7 @@ public class JsDocComment extends JsExpressionImpl {
         return tags;
     }
 
-    public JsDocComment(String tagName, JsNameRef tagValue) {
+    public JsDocComment(String tagName, JsExpression tagValue) {
         tags = Collections.<String, Object>singletonMap(tagName, tagValue);
     }
 
