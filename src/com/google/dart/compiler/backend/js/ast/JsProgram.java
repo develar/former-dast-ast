@@ -21,7 +21,7 @@ public final class JsProgram extends JsGlobalBlock {
     private final Map<String, JsStringLiteral> stringLiteralMap = new THashMap<String, JsStringLiteral>();
     private final JsScope topScope;
 
-    public JsProgram(String unitId) {
+    public JsProgram() {
         rootScope = new JsRootScope(this);
         topScope = new JsScope(rootScope, "Global");
     }
