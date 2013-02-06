@@ -15,16 +15,6 @@ public class ChameleonJsExpression implements JsExpression {
     }
 
     @Override
-    public boolean isLeaf() {
-        return expression.isLeaf();
-    }
-
-    @Override
-    public JsStatement makeStmt() {
-        return expression.makeStmt();
-    }
-
-    @Override
     public void accept(JsVisitor visitor) {
         expression.accept(visitor);
     }

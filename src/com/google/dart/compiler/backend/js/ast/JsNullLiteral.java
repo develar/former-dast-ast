@@ -4,7 +4,7 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-public final class JsNullLiteral extends JsLiteral.JsValueLiteral {
+public final class JsNullLiteral extends JsLiteral {
     JsNullLiteral() {
     }
 

@@ -4,7 +4,10 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-public abstract class JsNumberLiteral extends JsLiteral.JsValueLiteral {
+public abstract class JsNumberLiteral extends JsLiteral {
+    protected JsNumberLiteral() {
+    }
+
     public static final class JsDoubleLiteral extends JsNumberLiteral {
         public final double value;
 

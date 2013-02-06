@@ -3,7 +3,7 @@ package com.google.dart.compiler.backend.js.ast;
 import java.util.Collections;
 import java.util.Map;
 
-public class JsDocComment extends JsExpressionImpl {
+public class JsDocComment extends JsStatement implements JsExpression {
     private final Map<String, Object> tags;
 
     public JsDocComment(Map<String, Object> tags) {
@@ -25,5 +25,10 @@ public class JsDocComment extends JsExpressionImpl {
     @Override
     public void accept(JsVisitor v) {
         v.visitDocComment(this);
+    }
+
+    @Override
+    public JsDocComment source(Object info) {
+        throw new IllegalStateException();
     }
 }

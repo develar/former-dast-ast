@@ -7,23 +7,6 @@ package com.google.dart.compiler.backend.js.ast;
 import java.util.List;
 
 abstract class JsExpressionImpl extends SourceInfoAwareJsNode implements JsExpression {
-    /**
-     * Determines whether or not this expression is a leaf, such as a
-     * {@link JsNameRef}, {@link JsLiteral.JsBooleanLiteral}, and so on. Leaf expressions
-     * never need to be parenthesized.
-     */
-    @Override
-    public boolean isLeaf() {
-        // Conservatively say that it isn't a leaf.
-        // Individual subclasses can speak for themselves if they are a leaf.
-        return false;
-    }
-
-    @Override
-    public JsStatement makeStmt() {
-        return new JsExpressionStatement(this);
-    }
-
     protected abstract static class JsExpressionHasArguments extends JsExpressionImpl implements HasArguments {
         protected final List<JsExpression> arguments;
 

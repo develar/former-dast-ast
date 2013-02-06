@@ -5,14 +5,13 @@
 package com.google.dart.compiler.backend.js;
 
 import com.google.dart.compiler.backend.js.ast.*;
+import com.google.dart.compiler.backend.js.ast.JsLiteral.JsBooleanLiteral;
 import com.google.dart.compiler.backend.js.ast.JsVars.JsVar;
 import com.google.dart.compiler.util.TextOutput;
-import gnu.trove.THashSet;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsDoubleLiteral;
 import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsIntLiteral;
@@ -191,13 +190,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     protected boolean needSemi = true;
     private boolean lineBreakAfterBlock = true;
 
-    /**
-     * "Global" blocks are either the global block of a fragment, or a block
-     * nested directly within some other global block. This definition matters
-     * because the statements designated by statementEnds and statementStarts are
-     * those that appear directly within these global blocks.
-     */
-    private Set<JsBlock> globalBlocks = new THashSet<JsBlock>();
     protected final TextOutput p;
 
     public JsToStringGenerationVisitor(TextOutput out) {
@@ -602,7 +594,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         JsExpression qualifier = nameRef.getQualifier();
         if (qualifier != null) {
             final boolean enclose;
-            if (qualifier instanceof JsLiteral.JsValueLiteral) {
+            if (qualifier instanceof JsBooleanLiteral) {
                 // "42.foo" is not allowed, but "(42).foo" is.
                 enclose = qualifier instanceof JsNumberLiteral;
             }
@@ -927,8 +919,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         int count = 0;
         Iterator<JsStatement> iterator = x.getStatements().iterator();
         while (iterator.hasNext()) {
-            boolean isGlobal = x.isGlobalBlock() || globalBlocks.contains(x);
-
             if (truncate && count > JSBLOCK_LINES_TO_PRINT) {
                 p.print("[...]");
                 newlineOpt();
@@ -940,38 +930,23 @@ public class JsToStringGenerationVisitor extends JsVisitor {
             }
 
             needSemi = true;
-            boolean stmtIsGlobalBlock = false;
-            if (isGlobal) {
-                if (statement instanceof JsBlock) {
-                    // A block inside a global block is still considered global
-                    stmtIsGlobalBlock = true;
-                    globalBlocks.add((JsBlock) statement);
-                }
-            }
-
             accept(statement);
-            if (stmtIsGlobalBlock) {
-                //noinspection SuspiciousMethodCalls
-                globalBlocks.remove(statement);
-            }
             if (needSemi) {
                 /*
                 * Special treatment of function declarations: If they are the only item in a
                 * statement (i.e. not part of an assignment operation), just give them
                 * a newline instead of a semi.
                 */
-                boolean functionStmt =
-                        statement instanceof JsExpressionStatement && ((JsExpressionStatement) statement).getExpression() instanceof JsFunction;
+                boolean functionStmt = statement instanceof JsDocComment ||
+                                       (statement instanceof JsExpressionStatement &&
+                                        ((JsExpressionStatement) statement).getExpression() instanceof JsFunction);
                 /*
                 * Special treatment of the last statement in a block: only a few
                 * statements at the end of a block require semicolons.
                 */
                 boolean lastStatement = !iterator.hasNext() && needBraces && !JsRequiresSemiVisitor.exec(statement);
                 if (functionStmt) {
-                    if (lastStatement) {
-                        newlineOpt();
-                    }
-                    else {
+                    if (!lastStatement || !p.isCompact()) {
                         p.newline();
                     }
                 }

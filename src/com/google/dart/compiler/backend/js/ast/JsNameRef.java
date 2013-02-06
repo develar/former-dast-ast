@@ -36,7 +36,6 @@ public final class JsNameRef extends JsExpressionImpl implements HasName {
         return qualifier;
     }
 
-    @Override
     public boolean isLeaf() {
         return qualifier == null;
     }

@@ -5,7 +5,7 @@
 package com.google.dart.compiler.backend.js.ast;
 
 public abstract class JsLiteral extends JsExpressionImpl {
-    public static final JsValueLiteral THIS = new JsThisRef();
+    public static final JsThisRef THIS = new JsThisRef();
     public static final JsNameRef UNDEFINED = new JsNameRef("undefined");
 
     public static final JsNullLiteral NULL = new JsNullLiteral();
@@ -17,9 +17,8 @@ public abstract class JsLiteral extends JsExpressionImpl {
         return truth ? TRUE : FALSE;
     }
 
-    public static final class JsThisRef extends JsValueLiteral {
+    public static final class JsThisRef extends JsLiteral {
         private JsThisRef() {
-            super();
         }
 
         @Override
@@ -28,12 +27,11 @@ public abstract class JsLiteral extends JsExpressionImpl {
         }
     }
 
-    public static final class JsBooleanLiteral extends JsValueLiteral {
+    public static final class JsBooleanLiteral extends JsLiteral {
       private final boolean value;
 
-      // Should be interned by JsProgram
       private JsBooleanLiteral(boolean value) {
-        this.value = value;
+          this.value = value;
       }
 
       public boolean getValue() {
@@ -44,18 +42,5 @@ public abstract class JsLiteral extends JsExpressionImpl {
       public void accept(JsVisitor v) {
         v.visitBoolean(this);
       }
-    }
-
-    /**
-     * A JavaScript string literal expression.
-     */
-    public abstract static class JsValueLiteral extends JsLiteral {
-        protected JsValueLiteral() {
-        }
-
-        @Override
-        public final boolean isLeaf() {
-            return true;
-        }
     }
 }

@@ -4,7 +4,7 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-public final class JsRegExp extends JsLiteral.JsValueLiteral {
+public final class JsRegExp extends JsLiteral {
     private String flags;
     private String pattern;
 
