@@ -165,26 +165,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
             }
         }
         result.append(quoteChar);
-        escapeClosingTags(result);
         return result;
-    }
-
-    /**
-     * Escapes any closing XML tags embedded in <code>str</code>, which could
-     * potentially cause a parse failure in a browser, for example, embedding a
-     * closing <code>&lt;script&gt;</code> tag.
-     *
-     * @param str an unescaped literal; May be null
-     */
-    private static void escapeClosingTags(StringBuilder str) {
-        if (str == null) {
-            return;
-        }
-
-        int index = 0;
-        while ((index = str.indexOf("</", index)) != -1) {
-            str.insert(index + 1, '\\');
-        }
     }
 
     protected boolean needSemi = true;
@@ -465,8 +446,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
         semi();
 
-        // The incr expression.
-        //
         if (x.getIncrementExpression() != null) {
             spaceOpt();
             accept(x.getIncrementExpression());

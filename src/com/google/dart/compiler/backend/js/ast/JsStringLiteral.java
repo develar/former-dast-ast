@@ -5,11 +5,9 @@
 package com.google.dart.compiler.backend.js.ast;
 
 public final class JsStringLiteral extends JsLiteral {
-
   private final String value;
 
-  // These only get created by JsProgram so that they can be interned.
-  JsStringLiteral(String value) {
+    public JsStringLiteral(String value) {
       this.value = value;
   }
 

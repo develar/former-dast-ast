@@ -5,10 +5,7 @@
 package com.google.dart.compiler.backend.js.ast;
 
 import gnu.trove.TDoubleObjectHashMap;
-import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
-
-import java.util.Map;
 
 import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsDoubleLiteral;
 import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsIntLiteral;
@@ -18,7 +15,6 @@ public final class JsProgram extends JsGlobalBlock {
     private final TIntObjectHashMap<JsIntLiteral> intLiteralMap = new TIntObjectHashMap<JsIntLiteral>();
 
     private final JsRootScope rootScope;
-    private final Map<String, JsStringLiteral> stringLiteralMap = new THashMap<String, JsStringLiteral>();
     private final JsScope topScope;
 
     public JsProgram() {
@@ -61,18 +57,6 @@ public final class JsProgram extends JsGlobalBlock {
      */
     public JsScope getScope() {
         return topScope;
-    }
-
-    /**
-     * Creates or retrieves a JsStringLiteral from an interned object pool.
-     */
-    public JsStringLiteral getStringLiteral(String value) {
-        JsStringLiteral literal = stringLiteralMap.get(value);
-        if (literal == null) {
-            literal = new JsStringLiteral(value);
-            stringLiteralMap.put(value, literal);
-        }
-        return literal;
     }
 
     @Override
