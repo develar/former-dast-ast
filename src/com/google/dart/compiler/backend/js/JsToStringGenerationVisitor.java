@@ -658,7 +658,10 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
             JsExpression labelExpr = item.getLabelExpr();
             // labels can be either string, integral, or decimal literals
-            if (labelExpr instanceof JsNameRef) {
+            if (item.getLabel() != null) {
+                p.print(item.getLabel());
+            }
+            else if (labelExpr instanceof JsNameRef) {
                 p.print(((JsNameRef) labelExpr).getName());
             }
             else if (labelExpr instanceof JsStringLiteral) {

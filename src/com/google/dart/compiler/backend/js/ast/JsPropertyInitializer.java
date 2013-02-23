@@ -5,21 +5,35 @@
 package com.google.dart.compiler.backend.js.ast;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Used in object literals to specify property values by name.
  */
 public class JsPropertyInitializer extends SourceInfoAwareJsNode {
-    private JsExpression labelExpr;
+    private final JsExpression labelExpr;
+    private final String label;
     private JsExpression valueExpr;
 
     public JsPropertyInitializer(@NotNull JsExpression labelExpr) {
         this.labelExpr = labelExpr;
+        label = null;
     }
 
-    public JsPropertyInitializer(@NotNull JsExpression labelExpr, @NotNull JsExpression valueExpr) {
+    @Nullable
+    public String getLabel() {
+        return label;
+    }
+
+    public JsPropertyInitializer(@NotNull JsExpression labelExpr, @NotNull JsExpression value) {
         this(labelExpr);
-        this.valueExpr = valueExpr;
+        valueExpr = value;
+    }
+
+    public JsPropertyInitializer(@NotNull String label, @NotNull JsExpression value) {
+        labelExpr = null;
+        this.label = label;
+        valueExpr = value;
     }
 
     public JsExpression getLabelExpr() {
@@ -41,7 +55,9 @@ public class JsPropertyInitializer extends SourceInfoAwareJsNode {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.accept(labelExpr);
+        if (labelExpr != null) {
+            visitor.accept(labelExpr);
+        }
         visitor.accept(valueExpr);
     }
 }
