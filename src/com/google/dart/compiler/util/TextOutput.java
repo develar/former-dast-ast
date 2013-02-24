@@ -41,6 +41,9 @@ public interface TextOutput {
 
     void maybeIndent();
 
+    StringBuilder getBuilder();
+    void builderProduced(int increment);
+
     public interface OutListener {
         void newLined();
 

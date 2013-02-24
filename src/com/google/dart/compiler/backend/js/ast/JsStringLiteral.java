@@ -5,6 +5,9 @@
 package com.google.dart.compiler.backend.js.ast;
 
 public class JsStringLiteral extends JsLiteral {
+    public static final char UNESCAPED = '-';
+    public static final JsStringLiteral EMPTY = new JsStringLiteral("");
+
     private final CharSequence value;
     private final char quote;
 
@@ -18,12 +21,20 @@ public class JsStringLiteral extends JsLiteral {
         this.quote = quote;
     }
 
+    public static JsStringLiteral unescaped(CharSequence value) {
+        return new JsStringLiteral(value, UNESCAPED);
+    }
+
     public CharSequence getValue() {
         return value;
     }
 
     public char getQuote() {
         return quote;
+    }
+
+    public boolean isUnescaped() {
+        return quote == UNESCAPED;
     }
 
     @Override

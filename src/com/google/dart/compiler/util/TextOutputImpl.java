@@ -170,6 +170,17 @@ public class TextOutputImpl implements TextOutput {
     }
 
     @Override
+    public StringBuilder getBuilder() {
+        return out;
+    }
+
+    @Override
+    public void builderProduced(int increment) {
+        position += increment;
+        column += increment;
+    }
+
+    @Override
     public boolean isJustNewlined() {
         return justNewlined && !compact;
     }
