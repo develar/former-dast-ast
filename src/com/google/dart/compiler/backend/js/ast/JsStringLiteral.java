@@ -4,19 +4,30 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-public final class JsStringLiteral extends JsLiteral {
-  private final String value;
+public class JsStringLiteral extends JsLiteral {
+    private final CharSequence value;
+    private final char quote;
 
-    public JsStringLiteral(String value) {
-      this.value = value;
-  }
+    public JsStringLiteral(CharSequence value) {
+        this.value = value;
+        quote = '\'';
+    }
 
-  public String getValue() {
-    return value;
-  }
+    public JsStringLiteral(CharSequence value, char quote) {
+        this.value = value;
+        this.quote = quote;
+    }
 
-  @Override
-  public void accept(JsVisitor v) {
-    v.visitString(this);
-  }
+    public CharSequence getValue() {
+        return value;
+    }
+
+    public char getQuote() {
+        return quote;
+    }
+
+    @Override
+    public void accept(JsVisitor v) {
+        v.visitString(this);
+    }
 }
