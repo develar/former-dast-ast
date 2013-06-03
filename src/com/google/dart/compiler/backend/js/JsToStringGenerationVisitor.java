@@ -50,7 +50,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     /**
      * How many lines of code to print inside of a JsBlock when printing terse.
      */
-    private static final int JSBLOCK_LINES_TO_PRINT = 3;
+    private static final int JS_BLOCK_LINES_TO_PRINT = 3;
 
     protected boolean needSemi = true;
     private boolean lineBreakAfterBlock = true;
@@ -898,7 +898,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         int count = 0;
         Iterator<JsStatement> iterator = x.getStatements().iterator();
         while (iterator.hasNext()) {
-            if (truncate && count > JSBLOCK_LINES_TO_PRINT) {
+            if (truncate && count > JS_BLOCK_LINES_TO_PRINT) {
                 p.print("[...]");
                 newlineOpt();
                 break;
