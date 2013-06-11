@@ -22,45 +22,34 @@ import java.util.Map;
  * Scopes are associated with
  * {@link JsFunction}s, but the two are
  * not equivalent. Functions <i>have</i> scopes, but a scope does not
- * necessarily have an associated Function. Examples of this include the
- * {@link JsRootScope} and synthetic
- * scopes that might be created by a client.
+ * necessarily have an associated Function.
  * <p/>
  * <p/>
  * <p/>
  * Scopes can have parents to provide constraints when allocating actual
  * identifiers for names. Specifically, names in child scopes are chosen such
  * that they do not conflict with names in their parent scopes. The ultimate
- * parent is usually the global scope (see
- * {@link JsProgram#getRootScope()}),
+ * parent is usually the global scope,
  * but parentless scopes are useful for managing names that are always accessed
  * with a qualifier and could therefore never be confused with the global scope
  * hierarchy.
  */
 public class JsScope {
-    @Nullable
-    private final String description;
     private Map<String, String> names = Collections.emptyMap();
     private final JsScope parent;
     protected int tempIndex = 0;
 
-    public JsScope(JsScope parent) {
-        this(parent, null);
-    }
-
-    public JsScope(@NotNull JsScope parent, @Nullable String description) {
-        this.description = description;
+    public JsScope(@Nullable JsScope parent) {
         this.parent = parent;
     }
 
-    @NotNull
-    public JsScope innerScope(@Nullable String scopeName) {
-        return new JsScope(this, scopeName);
+    protected JsScope() {
+        parent = null;
     }
 
-    protected JsScope(@Nullable String description) {
-        this.description = description;
-        parent = null;
+    @NotNull
+    public JsScope innerScope() {
+        return new JsScope(this);
     }
 
     /**
@@ -116,24 +105,6 @@ public class JsScope {
             return parent.findName(ident);
         }
         return name;
-    }
-
-    /**
-     * Returns the parent scope of this scope, or <code>null</code> if this is the
-     * root scope.
-     */
-    public final JsScope getParent() {
-        return parent;
-    }
-
-    public JsProgram getProgram() {
-        assert (parent != null) : "Subclasses must override getProgram() if they do not set a parent";
-        return parent.getProgram();
-    }
-
-    @Override
-    public final String toString() {
-        return parent != null ? description + "->" + parent : description;
     }
 
     protected String doCreateName(String name) {

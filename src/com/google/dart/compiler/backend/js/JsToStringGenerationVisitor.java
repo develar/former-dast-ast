@@ -134,8 +134,8 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     }
 
     @Override
-    public void visitBlock(JsBlock x) {
-        printJsBlock(x, true, true);
+    public void visitBlock(JsBlock block) {
+        printBlock(block, true, true);
     }
 
     @Override
@@ -884,7 +884,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         }
     }
 
-    protected void printJsBlock(JsBlock x, boolean truncate, boolean finalNewline) {
+    protected void printBlock(JsBlock x, boolean truncate, boolean finalNewline) {
         if (!lineBreakAfterBlock) {
             finalNewline = false;
             lineBreakAfterBlock = true;

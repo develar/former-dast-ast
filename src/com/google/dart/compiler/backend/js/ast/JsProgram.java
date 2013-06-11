@@ -14,14 +14,6 @@ public final class JsProgram extends JsGlobalBlock {
     private final TDoubleObjectHashMap<JsDoubleLiteral> doubleLiteralMap = new TDoubleObjectHashMap<JsDoubleLiteral>();
     private final TIntObjectHashMap<JsIntLiteral> intLiteralMap = new TIntObjectHashMap<JsIntLiteral>();
 
-    private final JsRootScope rootScope;
-    private final JsScope topScope;
-
-    public JsProgram() {
-        rootScope = new JsRootScope(this);
-        topScope = new JsScope(rootScope, "Global");
-    }
-
     public JsNumberLiteral getNumberLiteral(double value) {
         JsDoubleLiteral literal = doubleLiteralMap.get(value);
         if (literal == null) {
@@ -40,23 +32,6 @@ public final class JsProgram extends JsGlobalBlock {
         }
 
         return literal;
-    }
-
-    /**
-     * Gets the quasi-mythical root scope. This is not the same as the top scope;
-     * all unresolvable identifiers wind up here, because they are considered
-     * external to the program.
-     */
-    public JsRootScope getRootScope() {
-        return rootScope;
-    }
-
-    /**
-     * Gets the top level scope. This is the scope of all the statements in the
-     * main program.
-     */
-    public JsScope getScope() {
-        return topScope;
     }
 
     @Override

@@ -37,8 +37,8 @@ public abstract class JsVisitor {
         visitElement(x);
     }
 
-    public void visitBlock(JsBlock x) {
-        visitElement(x);
+    public void visitBlock(JsBlock block) {
+        visitElement(block);
     }
 
     public void visitBoolean(JsLiteral.JsBooleanLiteral x) {

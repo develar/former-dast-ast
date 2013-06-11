@@ -19,14 +19,14 @@ public final class JsFunction extends JsLiteral implements HasName {
         this(parentScope, (String) null);
     }
 
-    public JsFunction(JsScope parentScope, JsBlock body) {
+    public JsFunction(@Nullable JsScope parentScope, JsBlock body) {
         this(parentScope, (String) null);
         this.body = body;
     }
 
-    private JsFunction(JsScope parentScope, @Nullable String name) {
+    private JsFunction(@Nullable JsScope parentScope, @Nullable String name) {
         this.name = name;
-        scope = new JsScope(parentScope, name);
+        scope = new JsScope(parentScope);
     }
 
     public JsBlock getBody() {
