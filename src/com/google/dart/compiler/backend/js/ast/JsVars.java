@@ -28,6 +28,10 @@ public class JsVars extends JsStatement {
         this.multiline = multiline;
     }
 
+    public JsVars(List<JsVar> vars) {
+        this(vars, false);
+    }
+
     public JsVars(JsVar var) {
         this(Collections.singletonList(var), false);
     }

@@ -61,6 +61,10 @@ public final class JsFunction extends JsLiteral implements HasName {
         this.body = body;
     }
 
+    public void add(JsStatement statement) {
+        body.getStatements().add(statement);
+    }
+
     @Override
     public void accept(JsVisitor v) {
         v.visitFunction(this);

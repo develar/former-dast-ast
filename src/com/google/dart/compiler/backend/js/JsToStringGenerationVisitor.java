@@ -437,7 +437,9 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
     @Override
     public void visitInvocation(JsInvocation invocation) {
-        printPair(invocation, invocation.getQualifier());
+        if (invocation.getQualifier() != null) {
+            printPair(invocation, invocation.getQualifier());
+        }
 
         leftParen();
         printExpressions(invocation.getArguments());

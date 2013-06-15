@@ -5,6 +5,7 @@
 package com.google.dart.compiler.backend.js.ast;
 
 import com.intellij.util.SmartList;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,8 +18,9 @@ public final class JsInvocation extends JsExpressionImpl.JsExpressionHasArgument
         super(new SmartList<JsExpression>());
     }
 
-    public JsInvocation(JsExpression qualifier, List<JsExpression> arguments) {
+    public JsInvocation(@Nullable JsExpression qualifier, List<JsExpression> arguments) {
         super(arguments);
+
         this.qualifier = qualifier;
     }
 
@@ -40,6 +42,7 @@ public final class JsInvocation extends JsExpressionImpl.JsExpressionHasArgument
         return arguments;
     }
 
+    @Nullable
     public JsExpression getQualifier() {
         return qualifier;
     }
@@ -55,7 +58,9 @@ public final class JsInvocation extends JsExpressionImpl.JsExpressionHasArgument
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.accept(qualifier);
+        if (qualifier != null) {
+            visitor.accept(qualifier);
+        }
         visitor.acceptList(arguments);
     }
 }
