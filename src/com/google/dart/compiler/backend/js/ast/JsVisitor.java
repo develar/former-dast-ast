@@ -4,8 +4,6 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-import com.google.dart.compiler.backend.js.ast.JsVars.JsVar;
-
 import java.util.List;
 
 public abstract class JsVisitor {

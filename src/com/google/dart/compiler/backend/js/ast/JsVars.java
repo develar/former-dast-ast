@@ -5,7 +5,6 @@
 package com.google.dart.compiler.backend.js.ast;
 
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,49 +44,7 @@ public class JsVars extends JsStatement {
         return multiline;
     }
 
-    /**
-     * A var declared using the JavaScript <code>var</code> statement.
-     */
-    public static class JsVar extends JsStatement implements HasName {
-        private final String name;
-        private JsExpression initExpression;
-
-        public JsVar(String name) {
-            this.name = name;
-        }
-
-        public JsVar(String name, @Nullable JsExpression initExpression) {
-            this.name = name;
-            this.initExpression = initExpression;
-        }
-
-        public JsExpression getInitExpression() {
-            return initExpression;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        public void setInitExpression(JsExpression initExpression) {
-            this.initExpression = initExpression;
-        }
-
-        @Override
-        public void accept(JsVisitor v) {
-            v.visit(this);
-        }
-
-        @Override
-        public void acceptChildren(JsVisitor visitor) {
-            if (initExpression != null) {
-                visitor.accept(initExpression);
-            }
-        }
-    }
-
-    public void add(JsVar var) {
+  public void add(JsVar var) {
         vars.add(var);
     }
 

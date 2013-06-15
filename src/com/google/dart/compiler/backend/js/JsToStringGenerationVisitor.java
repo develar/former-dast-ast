@@ -5,7 +5,7 @@
 package com.google.dart.compiler.backend.js;
 
 import com.google.dart.compiler.backend.js.ast.*;
-import com.google.dart.compiler.backend.js.ast.JsVars.JsVar;
+import com.google.dart.compiler.backend.js.ast.JsVar;
 import com.google.dart.compiler.util.TextOutput;
 
 import java.util.Iterator;
