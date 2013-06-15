@@ -33,6 +33,6 @@ public final class JsArrayLiteral extends JsLiteral {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.acceptWithInsertRemove(expressions);
+        visitor.acceptList(expressions);
     }
 }

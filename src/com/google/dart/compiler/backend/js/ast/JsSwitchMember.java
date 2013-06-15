@@ -24,6 +24,6 @@ public abstract class JsSwitchMember extends SourceInfoAwareJsNode {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.acceptWithInsertRemove(statements);
+        visitor.acceptList(statements);
     }
 }

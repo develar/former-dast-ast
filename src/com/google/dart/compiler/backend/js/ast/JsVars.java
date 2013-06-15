@@ -44,7 +44,7 @@ public class JsVars extends JsStatement {
         return multiline;
     }
 
-  public void add(JsVar var) {
+    public void add(JsVar var) {
         vars.add(var);
     }
 
@@ -65,6 +65,6 @@ public class JsVars extends JsStatement {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.acceptWithInsertRemove(vars);
+        visitor.acceptList(vars);
     }
 }

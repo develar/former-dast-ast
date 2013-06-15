@@ -55,7 +55,7 @@ public class JsTry extends JsStatement {
     @Override
     public void acceptChildren(JsVisitor visitor) {
         visitor.accept(tryBlock);
-        visitor.acceptWithInsertRemove(catches);
+        visitor.acceptList(catches);
         if (finallyBlock != null) {
            visitor.accept(finallyBlock);
         }

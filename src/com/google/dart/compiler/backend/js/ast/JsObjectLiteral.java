@@ -45,6 +45,6 @@ public final class JsObjectLiteral extends JsLiteral {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.acceptWithInsertRemove(properties);
+        visitor.acceptList(properties);
     }
 }

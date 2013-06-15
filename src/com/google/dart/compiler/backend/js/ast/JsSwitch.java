@@ -39,6 +39,6 @@ public class JsSwitch extends JsStatement {
     @Override
     public void acceptChildren(JsVisitor visitor) {
         visitor.accept(expression);
-        visitor.acceptWithInsertRemove(cases);
+        visitor.acceptList(cases);
     }
 }
