@@ -4,50 +4,47 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-/**
- * Represents a JavaScript if statement.
- */
 public final class JsIf extends JsStatement {
-    private JsExpression ifExpression;
-    private JsStatement thenStatement;
-    private JsStatement elseStatement;
+    private JsExpression _if;
+    private JsNode then;
+    private JsNode _else;
 
     public JsIf() {
     }
 
-    public JsIf(JsExpression ifExpression, JsStatement thenStatement, JsStatement elseStatement) {
-        this.ifExpression = ifExpression;
-        this.thenStatement = thenStatement;
-        this.elseStatement = elseStatement;
+    public JsIf(JsExpression ifExpression, JsStatement then, JsStatement elseStatement) {
+        _if = ifExpression;
+        this.then = then;
+        _else = elseStatement;
     }
 
-    public JsIf(JsExpression ifExpression, JsStatement thenStatement) {
-        this.ifExpression = ifExpression;
-        this.thenStatement = thenStatement;
+    public JsIf(JsExpression ifExpression, JsStatement then) {
+        _if = ifExpression;
+        this.then = then;
     }
 
-    public JsStatement getElseStatement() {
-        return elseStatement;
+    public JsNode getElse() {
+        return _else;
     }
 
-    public JsExpression getIfExpression() {
-        return ifExpression;
+    public JsExpression getIf() {
+        return _if;
     }
 
-    public JsStatement getThenStatement() {
-        return thenStatement;
+    public JsNode getThen() {
+        return then;
     }
 
-    public void setElseStatement(JsStatement elseStatement) {
-        this.elseStatement = elseStatement;
+    public void setElse(JsNode elseStatement) {
+        _else = elseStatement;
     }
 
-    public void setIfExpression(JsExpression ifExpression) {
-        this.ifExpression = ifExpression;
+    public void setIf(JsExpression ifExpression) {
+        _if = ifExpression;
     }
 
-    public void setThenStatement(JsStatement thenStatement) {
-        this.thenStatement = thenStatement;
+    public void setThen(JsNode then) {
+        this.then = then;
     }
 
     @Override
@@ -57,10 +54,10 @@ public final class JsIf extends JsStatement {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.accept(ifExpression);
-        visitor.accept(thenStatement);
-        if (elseStatement != null) {
-            visitor.accept(elseStatement);
+        visitor.accept(_if);
+        visitor.accept(then);
+        if (_else != null) {
+            visitor.accept(_else);
         }
     }
 }

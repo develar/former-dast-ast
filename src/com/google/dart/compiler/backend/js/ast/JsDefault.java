@@ -4,9 +4,6 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-/**
- * Represents the default option in a JavaScript swtich statement.
- */
 public final class JsDefault extends JsSwitchMember {
     @Override
     public void accept(JsVisitor v) {

@@ -10,30 +10,30 @@ import java.util.Collections;
 import java.util.List;
 
 public class JsBlock extends JsStatement {
-    private final List<JsStatement> statements;
+    private final List<JsNode> nodes;
 
     public JsBlock() {
-        this(new ArrayList<JsStatement>());
+        this(new ArrayList<JsNode>());
     }
 
-    public JsBlock(JsStatement statement) {
+    public JsBlock(JsNode statement) {
         this(Collections.singletonList(statement));
     }
 
-    public JsBlock(JsStatement... statements) {
-        this(Arrays.asList(statements));
+    public JsBlock(JsNode... nodes) {
+        this(Arrays.asList(nodes));
     }
 
-    public JsBlock(List<JsStatement> statements) {
-        this.statements = statements;
+    public JsBlock(List<JsNode> nodes) {
+        this.nodes = nodes;
     }
 
-    public List<JsStatement> getStatements() {
-        return statements;
+    public List<JsNode> getStatements() {
+        return nodes;
     }
 
     public boolean isEmpty() {
-        return statements.isEmpty();
+        return nodes.isEmpty();
     }
 
     public boolean isGlobalBlock() {
@@ -47,6 +47,6 @@ public class JsBlock extends JsStatement {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        visitor.acceptList(statements);
+        visitor.acceptList(nodes);
     }
 }

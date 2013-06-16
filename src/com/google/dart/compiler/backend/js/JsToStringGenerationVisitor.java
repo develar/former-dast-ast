@@ -5,10 +5,8 @@
 package com.google.dart.compiler.backend.js;
 
 import com.google.dart.compiler.backend.js.ast.*;
-import com.google.dart.compiler.backend.js.ast.JsVar;
 import com.google.dart.compiler.util.TextOutput;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +52,8 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
     protected boolean needSemi = true;
     private boolean lineBreakAfterBlock = true;
+
+    private boolean lineBreakAfterElse;
 
     protected final TextOutput p;
 
@@ -204,7 +204,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         JsExpression catchCond = x.getCondition();
         if (catchCond != null) {
             space();
-            _if();
+            p.print(CHARS_IF);
             space();
             accept(catchCond);
         }
@@ -262,7 +262,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         leftParen();
         accept(x.getCondition());
         rightParen();
-        nestedPush(x.getBody());
+        indentIfNotBlock(x.getBody());
         accept(x.getBody());
         nestedPop(x.getBody());
     }
@@ -270,7 +270,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     @Override
     public void visitDoWhile(JsDoWhile x) {
         p.print(CHARS_DO);
-        nestedPush(x.getBody());
+        indentIfNotBlock(x.getBody());
         accept(x.getBody());
         nestedPop(x.getBody());
         if (needSemi) {
@@ -310,8 +310,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         spaceOpt();
         leftParen();
 
-        // The init expressions or var decl.
-        //
         if (x.getInitExpression() != null) {
             accept(x.getInitExpression());
         }
@@ -321,8 +319,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
         semi();
 
-        // The loop test.
-        //
         if (x.getCondition() != null) {
             spaceOpt();
             accept(x.getCondition());
@@ -336,7 +332,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         }
 
         rightParen();
-        nestedPush(x.getBody());
+        indentIfNotBlock(x.getBody());
         accept(x.getBody());
         nestedPop(x.getBody());
     }
@@ -360,8 +356,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
             }
         }
         else {
-            // Just a name ref.
-            //
             accept(x.getIterExpression());
         }
 
@@ -371,67 +365,95 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         accept(x.getObjectExpression());
 
         rightParen();
-        nestedPush(x.getBody());
+        indentIfNotBlock(x.getBody());
         accept(x.getBody());
         nestedPop(x.getBody());
     }
 
     @Override
-    public void visitFunction(JsFunction x) {
+    public void visitFunction(JsFunction function) {
         p.print(CHARS_FUNCTION);
         space();
-        if (x.getName() != null) {
-            nameOf(x);
+        if (function.getName() != null) {
+            nameOf(function);
         }
 
         leftParen();
         boolean notFirst = false;
-        for (Object element : x.getParameters()) {
-            JsParameter param = (JsParameter) element;
-            notFirst = sepCommaOptSpace(notFirst);
-            accept(param);
+        List<JsParameter> parameters = function.getParameters();
+        if (!parameters.isEmpty()) {
+            for (JsParameter element : parameters) {
+                notFirst = sepCommaOptSpace(notFirst);
+                accept(element);
+            }
         }
         rightParen();
         space();
 
         lineBreakAfterBlock = false;
-        accept(x.getBody());
-        needSemi = true;
+        accept(function.getBody());
+        needSemi = false;
     }
 
     @Override
     public void visitIf(JsIf x) {
-        _if();
+        boolean doLineBreakAfterElse = lineBreakAfterElse;
+        lineBreakAfterElse = false;
+
+        p.print(CHARS_IF);
         spaceOpt();
         leftParen();
-        accept(x.getIfExpression());
+        accept(x.getIf());
         rightParen();
-        JsStatement thenStmt = x.getThenStatement();
-        nestedPush(thenStmt);
-        accept(thenStmt);
-        nestedPop(thenStmt);
-        JsStatement elseStatement = x.getElseStatement();
+
+        JsNode then = x.getThen();
+        printThenOrElseNode(then);
+
+        JsNode elseStatement = x.getElse();
         if (elseStatement != null) {
-            if (needSemi) {
-                semi();
+            if (then instanceof JsBlock || doLineBreakAfterElse) {
                 newlineOpt();
+            }
+            else if (elseStatement instanceof JsIf) {
+                if (p.isCompact()) {
+                    space();
+                }
+                else {
+                    p.newline();
+                }
             }
             else {
                 spaceOpt();
-                needSemi = true;
             }
             p.print(CHARS_ELSE);
-            boolean elseIf = elseStatement instanceof JsIf;
-            if (!elseIf) {
-                nestedPush(elseStatement);
+            if (elseStatement instanceof JsIf) {
+                space();
+                lineBreakAfterElse = true;
+                accept(elseStatement);
             }
             else {
-                space();
+                printThenOrElseNode(elseStatement);
             }
-            accept(elseStatement);
-            if (!elseIf) {
-                nestedPop(elseStatement);
+        }
+    }
+
+    private void printThenOrElseNode(JsNode node) {
+        boolean isBlock = node instanceof JsBlock;
+        if (isBlock) {
+            if (!p.isCompact()) {
+                p.newline();
+                p.indentIn();
             }
+        }
+        else {
+            spaceOpt();
+        }
+        accept(node);
+        if (isBlock) {
+            p.indentOut();
+        }
+        else {
+           semi();
         }
     }
 
@@ -886,66 +908,56 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         }
     }
 
-    protected void printBlock(JsBlock x, boolean truncate, boolean finalNewline) {
+    protected void printBlock(JsBlock block, boolean truncate, boolean finalNewline) {
         if (!lineBreakAfterBlock) {
             finalNewline = false;
             lineBreakAfterBlock = true;
         }
 
-        boolean needBraces = !x.isGlobalBlock();
+        boolean needBraces = !block.isGlobalBlock();
         if (needBraces) {
             blockOpen();
         }
 
         int count = 0;
-        Iterator<JsStatement> iterator = x.getStatements().iterator();
-        while (iterator.hasNext()) {
+        List<JsNode> nodes = block.getStatements();
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0, n = nodes.size(); i < n; i++) {
             if (truncate && count > JS_BLOCK_LINES_TO_PRINT) {
                 p.print("[...]");
                 newlineOpt();
                 break;
             }
-            JsStatement statement = iterator.next();
-            if (statement instanceof JsEmpty) {
+            JsNode node = nodes.get(i);
+            if (node instanceof JsEmpty) {
                 continue;
             }
 
-            needSemi = true;
-            accept(statement);
-            if (needSemi) {
-                /*
-                * Special treatment of function declarations: If they are the only item in a
-                * statement (i.e. not part of an assignment operation), just give them
-                * a newline instead of a semi.
-                */
-                boolean functionStmt = statement instanceof JsDocComment ||
-                                       (statement instanceof JsExpressionStatement &&
-                                        ((JsExpressionStatement) statement).getExpression() instanceof JsFunction);
-                /*
-                * Special treatment of the last statement in a block: only a few
-                * statements at the end of a block require semicolons.
-                */
-                boolean lastStatement = !iterator.hasNext() && needBraces && !JsRequiresSemiVisitor.exec(statement);
-                if (functionStmt) {
-                    if (!lastStatement || !p.isCompact()) {
-                        p.newline();
-                    }
+            accept(node);
+            if (p.isCompact()) {
+                semi();
+            }
+            else {
+                if (!(node instanceof JsFunction) &&
+                    (node instanceof JsLiteral ||
+                     node instanceof JsInvocation ||
+                     node instanceof JsVars ||
+                     node instanceof JsArrayAccess ||
+                     node instanceof JsBinaryOperation ||
+                     node instanceof JsUnaryOperation ||
+                     node instanceof JsOperator ||
+                     node instanceof JsNameRef ||
+                     node instanceof JsDebugger ||
+                     node instanceof JsExpressionStatement ||
+                     node instanceof JsContinue)) {
+                    semi();
                 }
-                else {
-                    if (lastStatement) {
-                        p.printOpt(';');
-                    }
-                    else {
-                        semi();
-                    }
-                    newlineOpt();
-                }
+                p.newline();
             }
             ++count;
         }
 
         if (needBraces) {
-            // _blockClose() modified
             p.indentOut();
             p.print('}');
             if (finalNewline) {
@@ -979,10 +991,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         p.print(CHARS_FOR);
     }
 
-    private void _if() {
-        p.print(CHARS_IF);
-    }
-
     private void leftParen() {
         p.print('(');
     }
@@ -1003,16 +1011,16 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         return pop;
     }
 
-    private boolean nestedPush(JsStatement statement) {
-        boolean push = !(statement instanceof JsBlock);
-        if (push) {
+    private boolean indentIfNotBlock(JsStatement statement) {
+        boolean indented = !(statement instanceof JsBlock);
+        if (indented) {
             newlineOpt();
             p.indentIn();
         }
         else {
             spaceOpt();
         }
-        return push;
+        return indented;
     }
 
     private static boolean parenCalc(JsExpression parent, JsExpression child, boolean wrongAssoc) {
