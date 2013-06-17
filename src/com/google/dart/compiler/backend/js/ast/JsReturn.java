@@ -4,9 +4,6 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-/**
- * A JavaScript return statement.
- */
 public final class JsReturn extends JsStatement {
     private JsExpression expression;
 

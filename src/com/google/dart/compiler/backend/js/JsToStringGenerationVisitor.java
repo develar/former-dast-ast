@@ -941,6 +941,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
                 if (!(node instanceof JsFunction) &&
                     (node instanceof JsLiteral ||
                      node instanceof JsInvocation ||
+                     node instanceof JsReturn ||
                      node instanceof JsVars ||
                      node instanceof JsArrayAccess ||
                      node instanceof JsBinaryOperation ||
