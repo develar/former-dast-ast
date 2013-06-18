@@ -438,23 +438,8 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     }
 
     private void printThenOrElseNode(JsNode node) {
-        boolean isBlock = node instanceof JsBlock;
-        if (isBlock) {
-            if (!p.isCompact()) {
-                p.newline();
-                p.indentIn();
-            }
-        }
-        else {
-            spaceOpt();
-        }
+        spaceOpt();
         accept(node);
-        if (isBlock) {
-            p.indentOut();
-        }
-        else {
-           semi();
-        }
     }
 
     @Override
@@ -1004,7 +989,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         p.print(hasName.getName());
     }
 
-    private boolean nestedPop(JsStatement statement) {
+    private boolean nestedPop(JsNode statement) {
         boolean pop = !(statement instanceof JsBlock);
         if (pop) {
             p.indentOut();
@@ -1012,7 +997,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         return pop;
     }
 
-    private boolean indentIfNotBlock(JsStatement statement) {
+    private boolean indentIfNotBlock(JsNode statement) {
         boolean indented = !(statement instanceof JsBlock);
         if (indented) {
             newlineOpt();

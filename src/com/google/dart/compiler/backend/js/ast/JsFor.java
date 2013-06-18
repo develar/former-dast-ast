@@ -16,7 +16,7 @@ package com.google.dart.compiler.backend.js.ast;
  * <code>null</code>, although the body will never be null.
  */
 public class JsFor extends JsStatement {
-    private JsStatement body;
+    private JsNode body;
     private JsExpression condition;
     private JsExpression incrementExpression;
     private JsExpression initExpression;
@@ -26,7 +26,7 @@ public class JsFor extends JsStatement {
         this(initVars, condition, incrementExpression, null);
     }
 
-    public JsFor(JsVars initVars, JsExpression condition, JsExpression incrementExpression, JsStatement body) {
+    public JsFor(JsVars initVars, JsExpression condition, JsExpression incrementExpression, JsNode body) {
         this.initVars = initVars;
         this.incrementExpression = incrementExpression;
         this.condition = condition;
@@ -46,7 +46,7 @@ public class JsFor extends JsStatement {
         initVars = null;
     }
 
-    public JsStatement getBody() {
+    public JsNode getBody() {
         return body;
     }
 

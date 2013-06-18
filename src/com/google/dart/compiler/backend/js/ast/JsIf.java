@@ -12,13 +12,13 @@ public final class JsIf extends JsStatement {
     public JsIf() {
     }
 
-    public JsIf(JsExpression ifExpression, JsStatement then, JsStatement elseStatement) {
+    public JsIf(JsExpression ifExpression, JsNode then, JsNode elseStatement) {
         _if = ifExpression;
         this.then = then;
         _else = elseStatement;
     }
 
-    public JsIf(JsExpression ifExpression, JsStatement then) {
+    public JsIf(JsExpression ifExpression, JsNode then) {
         _if = ifExpression;
         this.then = then;
     }
