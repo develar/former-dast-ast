@@ -7,13 +7,13 @@ package com.google.dart.compiler.backend.js.ast;
 public class JsLabel extends JsStatement implements HasName {
     private final String label;
 
-    private JsStatement statement;
+    private JsNode statement;
 
     public JsLabel(String label) {
         this.label = label;
     }
 
-    public JsLabel(String label, JsStatement statement) {
+    public JsLabel(String label, JsNode statement) {
         this.label = label;
         this.statement = statement;
     }
@@ -23,11 +23,11 @@ public class JsLabel extends JsStatement implements HasName {
         return label;
     }
 
-    public JsStatement getStatement() {
+    public JsNode getStatement() {
         return statement;
     }
 
-    public void setStatement(JsStatement statement) {
+    public void setStatement(JsNode statement) {
         this.statement = statement;
     }
 

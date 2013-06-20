@@ -5,7 +5,6 @@
 package com.google.dart.compiler.backend.js;
 
 import com.google.dart.compiler.backend.js.ast.*;
-import com.google.dart.compiler.backend.js.ast.JsExpressionStatement;
 
 /**
  * Determines if an expression statement needs to be surrounded by parentheses.
@@ -31,15 +30,14 @@ import com.google.dart.compiler.backend.js.ast.JsExpressionStatement;
  * </ul>
  */
 public class JsFirstExpressionVisitor extends RecursiveJsVisitor {
-    public static boolean exec(JsExpressionStatement statement) {
-        JsExpression expression = statement.getExpression();
+    public static boolean exec(JsNode node) {
         // Pure function declarations do not need parentheses
-        if (expression instanceof JsFunction) {
+        if (node instanceof JsFunction) {
             return false;
         }
 
         JsFirstExpressionVisitor visitor = new JsFirstExpressionVisitor();
-        visitor.accept(statement.getExpression());
+        visitor.accept(node);
         return visitor.needsParentheses;
     }
 

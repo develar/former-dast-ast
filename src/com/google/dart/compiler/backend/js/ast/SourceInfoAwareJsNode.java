@@ -22,9 +22,4 @@ abstract class SourceInfoAwareJsNode extends AbstractNode {
         source = info;
         return this;
     }
-
-    @Override
-    public JsStatement asStatement() {
-        throw new UnsupportedOperationException();
-    }
 }

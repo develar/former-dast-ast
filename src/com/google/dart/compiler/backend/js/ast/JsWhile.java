@@ -5,7 +5,7 @@
 package com.google.dart.compiler.backend.js.ast;
 
 public class JsWhile extends JsStatement {
-    protected JsStatement body;
+    protected JsNode body;
     protected JsExpression condition;
 
     public JsWhile() {
@@ -16,7 +16,7 @@ public class JsWhile extends JsStatement {
         this.body = body;
     }
 
-    public JsStatement getBody() {
+    public JsNode getBody() {
         return body;
     }
 
@@ -24,7 +24,7 @@ public class JsWhile extends JsStatement {
         return condition;
     }
 
-    public void setBody(JsStatement body) {
+    public void setBody(JsNode body) {
         this.body = body;
     }
 

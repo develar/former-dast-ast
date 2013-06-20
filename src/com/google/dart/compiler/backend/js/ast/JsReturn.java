@@ -4,16 +4,19 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
+import org.jetbrains.annotations.Nullable;
+
 public final class JsReturn extends JsStatement {
     private JsExpression expression;
 
     public JsReturn() {
     }
 
-    public JsReturn(JsExpression expression) {
+    public JsReturn(@Nullable JsExpression expression) {
         this.expression = expression;
     }
 
+    @Nullable
     public JsExpression getExpression() {
         return expression;
     }

@@ -73,10 +73,6 @@ public abstract class JsVisitor {
         visitElement(x);
     }
 
-    public void visitExpressionStatement(JsExpressionStatement x) {
-        visitElement(x);
-    }
-
     public void visitFor(JsFor x) {
         visitElement(x);
     }

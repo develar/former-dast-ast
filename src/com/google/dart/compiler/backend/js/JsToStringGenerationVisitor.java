@@ -53,8 +53,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     protected boolean needSemi = true;
     private boolean lineBreakAfterBlock = true;
 
-    private boolean lineBreakAfterElse;
-
     protected final TextOutput p;
 
     public JsToStringGenerationVisitor(TextOutput out) {
@@ -158,6 +156,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     public void visitContinue(JsContinue x) {
         p.print(CHARS_CONTINUE);
         continueOrBreakLabel(x);
+        semi();
     }
 
     private void continueOrBreakLabel(JsContinue x) {
@@ -181,16 +180,11 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
     private void printSwitchMemberStatements(JsSwitchMember x) {
         p.indentIn();
-        for (JsStatement stmt : x.getStatements()) {
-            needSemi = true;
-            accept(stmt);
-            if (needSemi) {
-                semi();
-            }
+        for (JsNode node : x.getStatements()) {
+            visistAsStatement(node);
             newlineOpt();
         }
         p.indentOut();
-        needSemi = false;
     }
 
     @Override
@@ -245,6 +239,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     @Override
     public void visitDebugger(JsDebugger x) {
         p.print(CHARS_DEBUGGER);
+        semi();
     }
 
     @Override
@@ -262,25 +257,15 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         leftParen();
         accept(x.getCondition());
         rightParen();
-        indentIfNotBlock(x.getBody());
-        accept(x.getBody());
-        nestedPop(x.getBody());
+        spaceOpt();
+        visistAsStatement(x.getBody());
     }
 
     @Override
     public void visitDoWhile(JsDoWhile x) {
         p.print(CHARS_DO);
-        indentIfNotBlock(x.getBody());
-        accept(x.getBody());
-        nestedPop(x.getBody());
-        if (needSemi) {
-            semi();
-            newlineOpt();
-        }
-        else {
-            spaceOpt();
-            needSemi = true;
-        }
+        spaceOpt();
+        visistAsStatement(x.getBody());
         _while();
         spaceOpt();
         leftParen();
@@ -293,18 +278,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     }
 
     @Override
-    public void visitExpressionStatement(JsExpressionStatement x) {
-        boolean surroundWithParentheses = JsFirstExpressionVisitor.exec(x);
-        if (surroundWithParentheses) {
-            leftParen();
-        }
-        accept(x.getExpression());
-        if (surroundWithParentheses) {
-            rightParen();
-        }
-    }
-
-    @Override
     public void visitFor(JsFor x) {
         _for();
         spaceOpt();
@@ -312,18 +285,16 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
         if (x.getInitExpression() != null) {
             accept(x.getInitExpression());
+            printSemiIfNeed(x.getInitExpression());
         }
         else if (x.getInitVars() != null) {
             accept(x.getInitVars());
         }
 
-        semi();
-
         if (x.getCondition() != null) {
             spaceOpt();
             accept(x.getCondition());
         }
-
         semi();
 
         if (x.getIncrementExpression() != null) {
@@ -332,9 +303,15 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         }
 
         rightParen();
-        indentIfNotBlock(x.getBody());
-        accept(x.getBody());
-        nestedPop(x.getBody());
+        spaceOpt();
+        visistAsStatement(x.getBody());
+    }
+
+    private void visistAsStatement(JsNode node) {
+        accept(node);
+        if (!(node instanceof JsBlock)) {
+            printSemiIfNeed(node);
+        }
     }
 
     @Override
@@ -365,9 +342,8 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         accept(x.getObjectExpression());
 
         rightParen();
-        indentIfNotBlock(x.getBody());
-        accept(x.getBody());
-        nestedPop(x.getBody());
+        spaceOpt();
+        visistAsStatement(x.getBody());
     }
 
     @Override
@@ -392,14 +368,10 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
         lineBreakAfterBlock = false;
         accept(function.getBody());
-        needSemi = false;
     }
 
     @Override
     public void visitIf(JsIf x) {
-        boolean doLineBreakAfterElse = lineBreakAfterElse;
-        lineBreakAfterElse = false;
-
         p.print(CHARS_IF);
         spaceOpt();
         leftParen();
@@ -407,39 +379,35 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         rightParen();
 
         JsNode then = x.getThen();
-        printThenOrElseNode(then);
+        if (then instanceof JsIf) {
+            newlineOpt();
+            p.indentIn();
+            accept(then);
+            p.indentOut();
+        }
+        else {
+            spaceOpt();
+            visistAsStatement(then);
+        }
 
         JsNode elseStatement = x.getElse();
         if (elseStatement != null) {
-            if (then instanceof JsBlock || doLineBreakAfterElse) {
-                newlineOpt();
-            }
-            else if (elseStatement instanceof JsIf) {
-                if (p.isCompact()) {
-                    space();
-                }
-                else {
-                    p.newline();
-                }
-            }
-            else {
+            if (!(then instanceof JsIf || then instanceof JsBlock)) {
                 spaceOpt();
             }
             p.print(CHARS_ELSE);
             if (elseStatement instanceof JsIf) {
                 space();
-                lineBreakAfterElse = true;
                 accept(elseStatement);
             }
             else {
-                printThenOrElseNode(elseStatement);
+                space();
+                visistAsStatement(elseStatement);
+                if (!(elseStatement instanceof JsBlock)) {
+                    newlineOpt();
+                }
             }
         }
-    }
-
-    private void printThenOrElseNode(JsNode node) {
-        spaceOpt();
-        accept(node);
     }
 
     @Override
@@ -607,9 +575,9 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
     @Override
     public void visitRegExp(JsRegExp x) {
-        slash();
+        p.print('/');
         p.print(x.getPattern());
-        slash();
+        p.print('/');
         String flags = x.getFlags();
         if (flags != null) {
             p.print(flags);
@@ -619,11 +587,12 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     @Override
     public void visitReturn(JsReturn x) {
         p.print(CHARS_RETURN);
-        JsExpression expr = x.getExpression();
-        if (expr != null) {
+        JsExpression expression = x.getExpression();
+        if (expression != null) {
             space();
-            accept(expr);
+            accept(expression);
         }
+        semi();
     }
 
     /**
@@ -828,6 +797,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
             accept(var);
         }
+        semi();
     }
 
     @Override
@@ -905,42 +875,20 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         }
 
         int count = 0;
-        List<JsNode> nodes = block.getStatements();
-        //noinspection ForLoopReplaceableByForEach
-        for (int i = 0, n = nodes.size(); i < n; i++) {
+        for (JsNode node : block.getStatements()) {
             if (truncate && count > JS_BLOCK_LINES_TO_PRINT) {
                 p.print("[...]");
                 newlineOpt();
                 break;
             }
-            JsNode node = nodes.get(i);
             if (node instanceof JsEmpty) {
                 continue;
             }
 
             accept(node);
-            if (p.isCompact()) {
-                semi();
-            }
-            else {
-                if (!(node instanceof JsFunction) &&
-                    (node instanceof JsLiteral ||
-                     node instanceof JsInvocation ||
-                     node instanceof JsReturn ||
-                     node instanceof JsVars ||
-                     node instanceof JsArrayAccess ||
-                     node instanceof JsBinaryOperation ||
-                     node instanceof JsUnaryOperation ||
-                     node instanceof JsOperator ||
-                     node instanceof JsNameRef ||
-                     node instanceof JsDebugger ||
-                     node instanceof JsExpressionStatement ||
-                     node instanceof JsContinue)) {
-                    semi();
-                }
-                p.newline();
-            }
-            ++count;
+            printSemiIfNeed(node);
+            newlineOpt();
+            count++;
         }
 
         if (needBraces) {
@@ -950,7 +898,19 @@ public class JsToStringGenerationVisitor extends JsVisitor {
                 newlineOpt();
             }
         }
-        needSemi = false;
+    }
+
+    private void printSemiIfNeed(JsNode node) {
+        if (!(node instanceof JsFunction) &&
+            (node instanceof JsLiteral ||
+             node instanceof JsInvocation ||
+             node instanceof JsArrayAccess ||
+             node instanceof JsBinaryOperation ||
+             node instanceof JsUnaryOperation ||
+             node instanceof JsOperator ||
+             node instanceof JsNameRef)) {
+            semi();
+        }
     }
 
     private void assignment() {
@@ -987,26 +947,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
     private void nameOf(HasName hasName) {
         p.print(hasName.getName());
-    }
-
-    private boolean nestedPop(JsNode statement) {
-        boolean pop = !(statement instanceof JsBlock);
-        if (pop) {
-            p.indentOut();
-        }
-        return pop;
-    }
-
-    private boolean indentIfNotBlock(JsNode statement) {
-        boolean indented = !(statement instanceof JsBlock);
-        if (indented) {
-            newlineOpt();
-            p.indentIn();
-        }
-        else {
-            spaceOpt();
-        }
-        return indented;
     }
 
     private static boolean parenCalc(JsExpression parent, JsExpression child, boolean wrongAssoc) {
@@ -1071,10 +1011,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
             spaceOpt();
         }
         return true;
-    }
-
-    private void slash() {
-        p.print('/');
     }
 
     private void space() {

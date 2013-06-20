@@ -38,9 +38,4 @@ public class ChameleonJsExpression implements JsExpression {
     public JsExpression source(Object info) {
         return expression.source(info);
     }
-
-    @Override
-    public JsStatement asStatement() {
-        return expression.asStatement();
-    }
 }
