@@ -561,11 +561,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     }
 
     @Override
-    public void visitProgram(JsProgram x) {
-        p.print("<JsProgram>");
-    }
-
-    @Override
     public void visitRegExp(JsRegExp x) {
         p.print('/');
         p.print(x.getPattern());

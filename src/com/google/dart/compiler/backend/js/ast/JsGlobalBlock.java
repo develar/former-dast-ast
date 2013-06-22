@@ -4,11 +4,18 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
+import java.util.List;
+
 /**
  * Represents a JavaScript block in the global scope
  */
 public class JsGlobalBlock extends JsBlock {
-    public JsGlobalBlock() {
+    public JsGlobalBlock(JsNode node) {
+        super(node);
+    }
+
+    public JsGlobalBlock(List<JsNode> nodes) {
+        super(nodes);
     }
 
     @Override
