@@ -10,9 +10,6 @@ import com.google.dart.compiler.util.TextOutput;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsDoubleLiteral;
-import static com.google.dart.compiler.backend.js.ast.JsNumberLiteral.JsIntLiteral;
-
 /**
  * Produces text output from a JavaScript AST.
  */
@@ -478,13 +475,8 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     }
 
     @Override
-    public void visitInt(JsIntLiteral x) {
-        p.print(x.value);
-    }
-
-    @Override
-    public void visitDouble(JsDoubleLiteral x) {
-        p.print(x.value);
+    public void visitNumber(JsNumberLiteral number) {
+        p.printNumber(number.getValue());
     }
 
     @Override
@@ -1041,17 +1033,9 @@ public class JsToStringGenerationVisitor extends JsVisitor {
                    && (op2 == JsUnaryOperator.DEC || op2 == JsUnaryOperator.NEG)
                    || (op == JsBinaryOperator.ADD && op2 == JsUnaryOperator.INC);
         }
-        if (arg instanceof JsNumberLiteral && (op == JsBinaryOperator.SUB || op == JsUnaryOperator.NEG)) {
-            if (arg instanceof JsIntLiteral) {
-                return ((JsIntLiteral) arg).value < 0;
-            }
-            else {
-                assert arg instanceof JsDoubleLiteral;
-                //noinspection CastConflictsWithInstanceof
-                return ((JsDoubleLiteral) arg).value < 0;
-            }
-        }
-        return false;
+        return arg instanceof JsNumberLiteral &&
+               (op == JsBinaryOperator.SUB || op == JsUnaryOperator.NEG) &&
+               ((JsNumberLiteral) arg).getValue().intValue() < 0;
     }
 
     private void spaceOpt() {

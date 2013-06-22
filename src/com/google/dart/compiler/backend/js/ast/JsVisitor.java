@@ -109,12 +109,8 @@ public abstract class JsVisitor {
         visitElement(x);
     }
 
-    public void visitInt(JsNumberLiteral.JsIntLiteral x) {
-        visitElement(x);
-    }
-
-    public void visitDouble(JsNumberLiteral.JsDoubleLiteral x) {
-        visitElement(x);
+    public void visitNumber(JsNumberLiteral number) {
+        visitElement(number);
     }
 
     public void visitObjectLiteral(JsObjectLiteral x) {

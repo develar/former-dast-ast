@@ -100,12 +100,7 @@ class JsPrecedenceVisitor extends JsVisitor {
     }
 
     @Override
-    public void visitInt(JsNumberLiteral.JsIntLiteral x) {
-        answer = 17; // primary
-    }
-
-    @Override
-    public void visitDouble(JsNumberLiteral.JsDoubleLiteral x) {
+    public void visitNumber(JsNumberLiteral number) {
         answer = 17; // primary
     }
 

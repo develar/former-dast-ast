@@ -1,44 +1,25 @@
-// Copyright (c) 2011, the Dart project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 package com.google.dart.compiler.backend.js.ast;
 
-public abstract class JsNumberLiteral extends JsLiteral {
-    protected JsNumberLiteral() {
+public class JsNumberLiteral extends JsLiteral {
+    public static final JsNumberLiteral V_0 = new JsNumberLiteral(0);
+    public static final JsNumberLiteral V_M1 = new JsNumberLiteral(-1);
+
+    private final Number value;
+
+    public JsNumberLiteral(Number value) {
+        this.value = value;
     }
 
-    public static final class JsDoubleLiteral extends JsNumberLiteral {
-        public final double value;
-
-        JsDoubleLiteral(double value) {
-            this.value = value;
-        }
-
-        @Override
-        public void accept(JsVisitor v) {
-            v.visitDouble(this);
-        }
-
-        public String toString() {
-            return String.valueOf(value);
-        }
+    public Number getValue() {
+        return value;
     }
 
-    public static final class JsIntLiteral extends JsNumberLiteral {
-        public final int value;
+    @Override
+    public void accept(JsVisitor v) {
+        v.visitNumber(this);
+    }
 
-        JsIntLiteral(int value) {
-            this.value = value;
-        }
-
-        @Override
-        public void accept(JsVisitor v) {
-            v.visitInt(this);
-        }
-
-        public String toString() {
-            return String.valueOf(value);
-        }
+    public String toString() {
+        return String.valueOf(value);
     }
 }

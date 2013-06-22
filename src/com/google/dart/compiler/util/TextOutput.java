@@ -19,9 +19,7 @@ public interface TextOutput {
 
     void print(char c);
 
-    void print(int v);
-
-    void print(double v);
+    void printNumber(Number v);
 
     void print(char[] s);
 

@@ -84,18 +84,27 @@ public class TextOutputImpl implements TextOutput {
     }
 
     @Override
-    public void print(double value) {
+    public void printNumber(Number value) {
         maybeIndent();
         int oldLength = out.length();
-        out.append(value);
-        movePosition(out.length() - oldLength);
-    }
-
-    @Override
-    public void print(int value) {
-        maybeIndent();
-        int oldLength = out.length();
-        out.append(value);
+        if (value instanceof Integer) {
+            out.append(value.intValue());
+        }
+        else if (value instanceof Float) {
+            out.append(value.floatValue());
+        }
+        else if (value instanceof Double) {
+            out.append(value.doubleValue());
+        }
+        else if (value instanceof Long) {
+            out.append(value.longValue());
+        }
+        else if (value instanceof Short) {
+            out.append(value.shortValue());
+        }
+        else if (value instanceof Byte) {
+            out.append(value.byteValue());
+        }
         movePosition(out.length() - oldLength);
     }
 
