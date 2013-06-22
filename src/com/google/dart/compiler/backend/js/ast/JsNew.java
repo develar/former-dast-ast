@@ -4,19 +4,19 @@
 
 package com.google.dart.compiler.backend.js.ast;
 
-import com.intellij.util.SmartList;
-
+import java.util.Collections;
 import java.util.List;
 
 public final class JsNew extends JsExpressionImpl.JsExpressionHasArguments {
     private JsExpression constructorExpression;
 
     public JsNew(JsExpression constructorExpression) {
-        this(constructorExpression, new SmartList<JsExpression>());
+        this(constructorExpression, Collections.<JsExpression>emptyList());
     }
 
     public JsNew(JsExpression constructorExpression, List<JsExpression> arguments) {
         super(arguments);
+
         this.constructorExpression = constructorExpression;
     }
 
