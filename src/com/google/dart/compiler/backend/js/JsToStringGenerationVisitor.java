@@ -48,7 +48,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
     private static final int JS_BLOCK_LINES_TO_PRINT = 3;
 
     protected boolean needSemi = true;
-    private boolean lineBreakAfterBlock = true;
 
     protected final TextOutput p;
 
@@ -130,7 +129,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
 
     @Override
     public void visitBlock(JsBlock block) {
-        printBlock(block, true, true);
+        printBlock(block, true);
     }
 
     @Override
@@ -363,7 +362,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         rightParen();
         space();
 
-        lineBreakAfterBlock = false;
         accept(function.getBody());
     }
 
@@ -731,6 +729,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         p.print(CHARS_THROW);
         space();
         accept(x.getExpression());
+        semi();
     }
 
     @Override
@@ -850,12 +849,7 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         }
     }
 
-    protected void printBlock(JsBlock block, boolean truncate, boolean finalNewline) {
-        if (!lineBreakAfterBlock) {
-            finalNewline = false;
-            lineBreakAfterBlock = true;
-        }
-
+    protected void printBlock(JsBlock block, boolean truncate) {
         boolean needBraces = !block.isGlobalBlock();
         if (needBraces) {
             blockOpen();
@@ -881,9 +875,6 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         if (needBraces) {
             p.indentOut();
             p.print('}');
-            if (finalNewline) {
-                newlineOpt();
-            }
         }
     }
 
