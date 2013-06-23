@@ -70,7 +70,7 @@ public final class JsFunction extends JsLiteral implements HasName {
 
     @Override
     public void acceptChildren(JsVisitor visitor) {
-        if (parameters != null) {
+        if (!parameters.isEmpty()) {
             visitor.acceptList(parameters);
         }
         visitor.accept(body);

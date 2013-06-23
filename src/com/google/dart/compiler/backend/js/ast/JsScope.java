@@ -62,7 +62,7 @@ public class JsScope {
      * @param identifier An identifier that is unique within this scope.
      */
     public String declareName(String identifier) {
-        String name = findOwnName(identifier);
+        String name = names.get(identifier);
         return name != null ? name : doCreateName(identifier);
     }
 
@@ -100,7 +100,7 @@ public class JsScope {
      */
     @Nullable
     public final String findName(String ident) {
-        String name = findOwnName(ident);
+        String name = names.get(ident);
         if (name == null && parent != null) {
             return parent.findName(ident);
         }
@@ -110,15 +110,5 @@ public class JsScope {
     protected String doCreateName(String name) {
         names = Maps.put(names, name, name);
         return name;
-    }
-
-    /**
-     * Attempts to find the name object for the specified ident, searching in this
-     * scope only.
-     *
-     * @return <code>null</code> if the identifier has no associated name
-     */
-    protected String findOwnName(String ident) {
-        return names.get(ident);
     }
 }
