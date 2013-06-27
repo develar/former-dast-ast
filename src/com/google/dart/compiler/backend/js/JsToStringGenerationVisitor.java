@@ -770,6 +770,10 @@ public class JsToStringGenerationVisitor extends JsVisitor {
         space();
         boolean sep = false;
         for (JsVar var : vars.getVars()) {
+            if (var == null) {
+                continue;
+            }
+
             if (sep) {
                 if (vars.isMultiline()) {
                     newlineOpt();
